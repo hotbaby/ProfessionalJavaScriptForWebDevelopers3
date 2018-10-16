@@ -1,0 +1,393 @@
+
+<html>
+    <head></head>
+
+    <body>
+        <title>JavaScript高级程序设计-基本概念</title>
+    </body>
+    <h1>JavaScript高级程序设计  第3章 基本概念</h1>
+    <h2>数据类型</h2>
+    <h3>Undefined类型</h3>
+    <script type="text/javascript">
+    function debug() {
+        var message = "hello world";
+        alert(typeof message)
+        alert(typeof age)
+    }
+    // debug()
+    </script>
+
+    <h3>Null类型</h3>
+    <p>Null 类型是第二个只有一个值的数据类型，这个特殊的值是 null。从逻辑角度来看，null 值表 示一个空对象指针，而这也正是使用 typeof 操作符检测 null 值时会返回"object"的原因</p>
+    <script type="text/javascript">
+    function debug_null() {
+        var car = null;
+        alert(typeof(car))
+    }
+    // debug_null()
+    </script>
+
+    <p>如果定义的变量准备在将来用于保存对象，那么最好将该变量初始化为 null 而不是其他值。这样 一来，只要直接检查 null 值就可以知道相应的变量是否已经保存了一个对象的引用</p>
+    <p>实际上，undefined 值是派生自 null 值的，因此 ECMA-262 规定对它们的相等性测试要返回 true:  alert(null == undefined);    //true</p>
+    <script type="text/javascript">
+    function var_init_null() {
+        var car = null;
+        if (car != null) {
+
+        }
+    }
+    </script>
+
+    <h3>Number类型</h3>
+    <p>最基本的数值字面量格式是十进制整数</p>
+    <p>除了以十进制表示外，整数还可以通过八进制(以 8 为基数)或十六进制(以 16 为基数)的字面值 来表示。其中，八进制字面值的第一位必须是零(0)，然后是八进制数字序列(0~7)。</p>
+    <p>var octalNum1 = 070  //八进制的56</p>
+    <p>var octalNum2 = 079  //无效的八进制数，解析为79</p>
+    <p>var octalNum3 = 08 // 无效的八进制数，解析为8</p>
+
+    <p>NaN，即非数值(Not a Number)这个数值用于表示一个本来要返回数值的操作数未返回数值的情况(这样就不会抛出错误了)。例如，在其他编程语言中，任何数值除以 0 都会导致错误， 从而停止代码执行。是一个特殊的数值，这个数值用于表示一个本来要返回数值的操作数未返回数值的情况(这样就不会抛出错误了)。例如，在其他编程语言中，任何数值除以 0 都会导致错误， 从而停止代码执行。</p>
+
+    <script type="text/javascript">
+        function test_boolean() {
+            // alert(Number(true))
+            // alert(Number(false))
+            // alert(Number(undefined))
+            // alert(parseInt('0xf'))
+        }
+        test_boolean()
+    </script>
+
+    <h3>String类型</h3>
+    <script type="text/javascript">
+        var age = 11;
+        var num = 10;
+        console.log("age.toString():" + age.toString());
+        console.log("num:" + num);
+        console.log("num.toString(2):" + num.toString(2));
+        console.log("num.toString(8):" + num.toString(8));
+        console.log("num.toString(10):" + num.toString(10));
+        console.log("num.toString(16):" + num.toString(16));
+    
+        var value1 = 10;
+        var value2 = true
+        var value3 = null
+        var value4;
+
+        console.log("value1:" + value1);
+        console.log("value2:" + value2);
+        console.log("value3:" + value3);
+        console.log("value4:" + value4);
+
+        console.log("String(value1):" + String(value1) + " typeof:" + typeof(String(value1)));
+        console.log("String(value2):" + String(value2) + " typeof:" + typeof(String(value2)));
+        console.log("String(value3):" + String(value3) + " typeof:" + typeof(String(value3)));
+        console.log("String(value4):" + String(value4) + " typeof:" + typeof(String(value4)));
+        
+    </script>
+
+    <p>Object类型</p>
+    <script type="text/javascript">
+        var type = "Object类型"
+        console.log(type);
+
+        var o = new Object();
+    </script>
+
+    <h2>操作符</h2>
+    <h3>一元操作符</h3>
+    <p>只能操作一个值的操作符叫做一元操作符</p>
+    <script type="text/javascript">
+        var age = 29;
+        console.log("age:" + age + " ++age:" + (++age));
+        console.log("age:" + age + " --age:" + (--age));
+    
+    </script>
+        
+    <h3>位操作符</h3>
+    <p>按位非NOT</p>
+    <script type="text/javascript">
+        console.log("按位非");
+        var num1 = 25;
+        var num2 = ~num1;
+        console.log("num1.toString(2):" + num1.toString(2));
+        console.log("num2.toString(2):" + num2.toString(2));
+    </script>
+
+    <p>按位与AND</p>
+    <script type="text/javascript">
+        console.log("按位与AND");
+        var num1 = 25;
+        var num2 = 3;
+        console.log("num1.toString(2):" + num1.toString(2));
+        console.log("num2.toString(2):" + num2.toString(2));
+        console.log("(num1&num2).toString(2):", (num1&num2).toString(2))
+    </script>
+
+    <p>按位或OR</p>
+    <script type="text/javascript">
+        console.log("按位或OR");
+        var num1 = 25;
+        var num2 = 3;
+        console.log("num1.toString(2):" + num1.toString(2));
+        console.log("num2.toString(2):" + num2.toString(2));
+        console.log("(num1 | num2).toString(2):" + (num1 | num2).toString(2));
+    </script>
+
+    <p>按位异或^</p>
+    <script type="text/javascript">
+        console.log("按位异或^");
+        var num1 = 25;
+        var num2 = 3;
+        console.log("num1.toString(2):" + num1.toString(2));
+        console.log("num2.toString(2):" + num2.toString(2));
+        console.log("(num1 ^ num2).toString(2):" + (num1 ^ num2).toString(2));
+    </script>
+
+    <p>左移<<</p>
+    <script type="text/javascript">
+        console.log("左移<<");
+        var num = 2;
+        console.log("num.toString(2):" + num.toString(2));
+        console.log("(num << 2).toString(2):" + (num<<2).toString(2) + " num:" + (num<<2));
+    </script>
+
+    <p>有符号右移>></p>
+    <script type="text/javascript">
+        console.log("有符号右移>>");
+        var num = 64;
+        console.log("num.toString(2):" + num.toString(2) + " (num >> 5).toString(2):" + (num >> 5).toString(2));
+
+        var num = -64;
+        console.log("num.toString(2):" + num.toString(2) + " (num >> 5).toString(2)" + (num>>5).toString(2))
+    </script>
+
+    <p>无符号右移>>></p>
+    <script type="text/javascript">
+        console.log("无符号右移>>");
+        var num = 64;
+        console.log("num.toString(2):" + num.toString(2) + " (num >> 5).toString(2):" + (num >>> 5).toString(2));
+
+        var num = -64;
+        console.log("num.toString(2):" + num.toString(2) + " (num >> 5).toString(2)" + (num >>> 5).toString(2))
+    </script>
+
+    <h3>布尔操作符</h3>
+    
+    <p>逻辑非</p>
+    <p>逻辑非用惊叹号！表示，逻辑非操作符会将操作转化成布尔值再求反</p>
+    <ul>
+        <li>如果操作数是一个对象，返回false</li>
+        <li>如果操作数是一个空字符串，返回true</li>
+        <li>如果操作数是一个非空字符串，返回false</li>
+        <li>如果操作数一个0，返回true</li>
+        <li>如果操作数是任意非0数值，返回false</li>
+        <li>如果操作数是null，返回true</li>
+        <li>如果操作数是NaN，返回true</li>
+        <li>如果操作数是undefined，返回true</li>
+    </ul>
+    <p>逻辑与</p>
+    <p>逻辑由两个&&表示</p>
+    <script type="text/javascript">
+        console.log("\n");
+        console.log("逻辑与操作");
+        console.log("true && false:" + (true && false));
+        console.log("true && true:" + (true && true));
+        console.log("false && false:" + (false && false));
+    </script>
+
+    <p>逻辑或</p>
+    <p>逻辑或用两个竖线||表示</p>
+    <script type="text/javascript">
+        console.log("\n");
+        console.log("逻辑或||操作");
+        console.log("true || false: " + (true || false));
+        console.log("true || true:" + (true || true));
+        console.log("false || false:" + (false || false));
+    </script>
+
+    <h3>乘性操作符</h3>
+    <script type="text/javascript">
+        console.log("\n");
+        console.log("成性操作符");
+        console.log("2 * 2 = " + 2 * 2 );
+    </script>
+
+    <h3>加性操作符</h3>
+    <script type="text/javascript">
+        console.log("\n");
+        console.log("加法操作：");
+        console.log("2 + 2 = " + (2 + 2));
+    </script>
+
+    <h3>关系操作符</h3>
+    <h3>相等操作符</h3>
+    <h3>条件操作符</h3>
+    <h3>赋值操作符</h3>
+    <h3>逗号操作符</h3>
+    <p>var num = (3, 4, 5, 0) // var = 0</p>
+    <script type="text/javascript">
+        console.log("\n");
+        console.log("逗号操作符：");
+        var num = (3, 4, 5, 0);
+        console.log("var num = (3, 4, 5, 0) var=" + num);
+    </script>
+
+    <h2>语句</h2>
+    <h3>if语句</h3>
+    <script type="text/javascript">
+        console.log("\n");
+        console.log("if statement:");
+        var num = 100;
+        if (num > 1) {
+            console.log("num " + num + " greater than 1");
+        }
+        else {
+            console.log("num " + num + " less than 1");
+        }
+    </script>
+    <h3>do-while语句</h3>
+    <script type="text/javascript">
+        console.log("\n");
+        console.log("do-while statement:");
+        var loopNum = 3
+        do {
+            console.log("loopNum: " + loopNum);
+            loopNum -= 1;
+        } while (loopNum > 0);
+    </script>
+
+    <h3>while语句</h3>
+    <script type="text/javascript">
+        console.log("\n");
+        console.log("while statement:");
+        var loopNum = 3;
+        while (loopNum > 0) {
+            console.log("loopNum: " + loopNum);
+            loopNum -= 1;
+        };
+    </script>
+
+    <h3>for语句</h3>
+    <p>for(initialization; expression; post-loop-expression) statement</p>
+    <script type="text/javascript">
+        console.log("\n");
+        console.log("for statement:");
+        for (var loopNum=0; loopNum < 3; loopNum+=1) {
+            console.log(loopNum);
+        }
+    </script>
+
+    <h3>for-in语句</h3>
+    <p>for-in是一种精准的迭代语句，用来枚举对象属性。</p>
+    <p>for (property in expression) statement</p>
+    <script type="text/javascript">
+        console.log("\n");
+        console.log("for-in statement:");
+        for (var propertyName in window) {
+            console.log("window property:" + propertyName);
+            break;
+        }
+    </script>
+
+    <h3>label语句</h3>
+    <p>使用label语句在代码中添加标签，以便将来使用。</p>
+    <p>lable: statment</p>
+    <script type="text/javascript">
+        console.log("\n");
+        console.log("lable statement:");
+        start: for(var loopNum=0; loopNum<3; loopNum++) {
+            console.log(loopNum);
+        }
+    </script>
+
+    <h3>break和continue语句</h3>
+    <script type="text/javascript">
+        console.log("\n");
+        console.log("break and continue statement:");
+        var num = 0;
+        outerLoop:
+        for (var i=0; i < 10; i++) {
+            for (var j=0; j < 10; j++) {
+                if (i==5 && j==5) {
+                    break outerLoop;
+                }
+                num += 1;
+            }
+        }
+        console.log("num:" + num);
+
+        var num = 0;
+        outerLoop:
+        for (var i=0; i < 10; i++) {
+            for (var j=0; j < 10; j++) {
+                if (i==5 && j==5) {
+                    continue outerLoop;
+                }
+                num += 1;
+            }
+        }
+        console.log("num:" + num);
+    </script>
+
+    <h3>with语句</h3>
+    <p>with语句的作用是将代码的作用域设置到一个特定的对象中。</p>
+    <p>with (expression) statement;</p>
+    <script type="text/javascript">
+        console.log("\n");
+        console.log("with statement");
+        // var qs = location.search.substring(1);
+        // var hostname = location.hostname;
+        // var url = location.url
+
+        // with (location) {
+        //     var qs = search.substring(1);
+        //     var hostname = hostname;
+        //     var url = url;
+        // }
+    </script>
+    <b>由于大量使用with语句会导致性能下降，同时也会给代码调试造成困难，因此，在开发大型应用程序时，不建议使用with语句。</b>
+
+    <h3>switch语句</h3>
+    <p>swith是一种流程控制语句。</p>
+    <script type="text/javascript">
+        console.log("\n");
+        console.log("switch statement");
+        var num = 10;
+        switch (num) {
+            case 5:
+                console.log(num);
+                break;
+            case 10:
+                console.log(num);
+                break;
+            case 15:
+                console.log(num);
+                break;
+            default:
+                console.log(num);
+        }
+    </script>
+
+    <h2>函数</h2>
+    <script type="text/javascript">
+        function sayHi() {
+            console.log("Hello " + arguments[0] + ', ' + arguments[1]);
+        }
+        sayHi('Beijing', 'Shanghai');
+    </script>
+    <h3>理解参数</h3>
+
+    <h3>没有重载</h3>
+
+    <h3>小结</h3>
+    <ul>
+        <li>ECMAScript基本的数据类型：Undefined, Null, Boolean, Number, String</li>
+        <li>ECMAScript没有为整数和浮点数分别定义不同的数据类型，Number可以用于表示所有的数据</li>
+        <li>ECMAScript也有一种复杂的数据类型，即Object类型，该类型是这门语言中所有对象的基础类型</li>
+        <li>无需指定函数的返回值</li>
+        <li>未指定返回值的函数返回的是一个特殊的undefined值</li>
+        <li>ECMASCript没有函数签名的概念，因为其参数是以一个包含0或多个值的数据的形式传递的</li>
+        <li>可以向ECMAScript传递任意数量的参数，并且可以同arguments对象访问这些参数</li>
+        <li>由于不存在函数签名的特性，ECMAScript函数不能重载</li>
+    </ul>
+</html>
