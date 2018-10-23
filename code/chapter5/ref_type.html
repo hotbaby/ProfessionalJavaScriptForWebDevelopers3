@@ -1,0 +1,149 @@
+<html>
+    <head>
+        <title>Javascript高级程序设计（第3版）</title>
+    </head>
+
+    <body>
+        <h1>引用类型</h1>
+        <p>引用类型的值（对象）是引用类型的一个实例。在ECMAScript中，引用类型是一种数据结构，用于将数据和功能组织在一起。</p>
+        <b>虽然引用类型与类看起来很类似，但它们是不同的概念。为避免混淆，本书不使用类这个概念。</b>
+
+        <h2>Object类型</h2>
+        <p>创建Object实例的方式有两种。</p>
+        <p>第一种是使用new操作符后跟Object构造函数：</p>
+        <script type="text/javascript">
+            console.log("\n");
+            console.log("new创建Object");
+            var person = new Object();
+            person.name = "Nicholas";
+            person.age = 29;
+        </script>
+        
+        <p>第二种方式是对象字面量表示法。对象字面量是对象定义的一种简写形式，目的在于简化创建包含大量属性的对象的过程。</p>
+        <script type="text/javascript">
+            console.log("\n");
+            console.log("字面常量创建Object");
+            var person = {
+                "name": "Nicholas",
+                "age": 29
+            };
+        </script>
+
+        <h2>Array类型</h2>
+        <script type="text/javascript">
+            var colors = new Array();
+            var colors = new Array(3);
+            var colors = new Array("red", "green", "blue");
+            console.log(colors);
+
+            var colors = ["red", "green", "blue"];
+            console.log(colors);
+        </script>
+
+        <h3>检测数据</h3>
+        <p>Array.isArray方法</p>
+        <script type="text/javascript">
+            var colors = ["red", "green", "blue"];
+            console.log("Array.isArray检测数据：" + Array.isArray(colors));
+        </script>
+
+        <h3>转换方法</h3>
+        <p>toLocaleString(), toString(), valueOf()</p>
+        <script type="text/javascript">
+            console.log("\n");
+            console.log("转换方法");
+            var colors = ["red", "green", "blue"];
+            console.log(colors.toString());
+            console.log(colors.toLocaleString());
+            console.log(colors.valueOf());
+
+            console.log(colors.join(','));
+            console.log(typeof colors.join(','));
+            console.log(colors.join('||'));
+            console.log(typeof colors.join('||'));
+        </script>
+
+        <h3>栈方法</h3>
+        <p>ECMAScript数组也提供了让一种数据的行为类似与其他数据结构的方法。具体来书，数组可以表现的像栈一样。</p>
+        <p>push, pop方法</p>
+        <script type="text/javascript">
+            console.log("\n");
+            console.log("栈方法：");
+            var colors = new Array();
+            colors.push("red", "green");
+            console.log(colors);
+
+            colors.push("blue");
+            colors.pop();
+            console.log(colors);
+        </script>
+
+        <h3>队列方法</h3>
+        <p>unshift, shift方法</p>
+        <script type="text/javascript">
+            console.log("\n");
+            console.log("队列方法");
+            var colors = new Array();
+            colors.push("red");
+            colors.push("green");
+            colors.push("blue");
+            colors.shift();
+            console.log(colors);
+
+            var colors = [];
+            colors.unshift("red", "green");
+            colors.unshift("blue");
+            colors.pop();
+            console.log(colors);
+        </script>
+
+        <h3>重排序方法</h3>
+        <p>sort, reverse方法</p>
+        <script type="text/javascript">
+            console.log("\n");
+            console.log("重排序：");
+            var values = [3, 4, 0, 10];
+            console.log(values);
+
+            values.sort();
+            console.log(values);
+
+            values.reverse();
+            console.log(values);
+
+            function compare(value1, value2) {
+                if (value1 > value2) {
+                    return 1;
+                }
+                else if (value1 == value2) {
+                    return 0;
+                }
+                else {
+                    return -1;
+                }
+            }
+            values.sort(compare);
+            console.log(values);
+        </script>
+        <h3>操作方法</h3>
+
+        <h3>位置方法</h3>
+        <p>indexOf, lastIndexOf方法</p>
+
+        <h3>迭代方法</h3>
+        <ol>
+            <li>every(): 对数据的每一项运行给定的函数，如果函数对每一项都返回true, 则返回true</li>
+            <li>filter(): 对数据每一项运行给定函数，返回函数返回true的项组成的数组</li>
+            <li>forEach(): 对数组每一项运行给定函数，该函数没有返回值</li>
+            <li>map(): 对数组每一项运行给定函数，返回每次调用结果组成的数组</li>
+            <li>some(): 对数组每一项运行给定函数，如果函数的任一项放回true，则返回true</li>
+        </ol>
+
+        <h3>归并方法</h3>
+        <p>reduce, reduceRight方法</p>
+
+
+        <h2>Date类型</h2>
+        <p>ECMAScript中的Date类型是在早期Java中的java.util.Date类型基础上构建的。为此，Date使用自1970.1.1开始经过的毫秒数来保存日期。</p>
+    </body>
+</html>
