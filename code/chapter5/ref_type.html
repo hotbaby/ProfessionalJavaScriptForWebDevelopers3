@@ -145,5 +145,134 @@
 
         <h2>Date类型</h2>
         <p>ECMAScript中的Date类型是在早期Java中的java.util.Date类型基础上构建的。为此，Date使用自1970.1.1开始经过的毫秒数来保存日期。</p>
+        <script type="text/javascript">
+            var now = new Date();
+        </script>
+        <h3>继承的方法</h3>
+        <p>Date类型重写toLocaleString()、toString()和valueOf()方法，但这些方法返回的值与其他类型的方法不同。</p>
+        <p>Date类型的toLocaleString()方法会按照浏览器设置地区响应的格式返回日期和时间。</p>
+
+        <h3>日期格式化方法</h3>
+        <ol>
+            <li>toDateString()</li>
+            <li>toTimeString()</li>
+            <li>toLocaleDateString()</li>
+            <li>toLocaleTimeString()</li>
+            <li>toUTCString()</li>
+        </ol>
+
+        <h3>日期/时间组件方法</h3>
+        <p></p>
+
+        <h2>RegExp类型</h2>
+        <p>ECMAScript通过RegExp类型来支持正则表达式。var expression = / pattern / flags;</p>
+        <p>正则表达式支持的标志：</p>
+        <ol>
+            <li>g: 表示全局global模式，即模式用于所有的字符串，而非在发现第一个匹配项时停止</li>
+            <li>i: 表示不区分大小case-insentitive模式，即在匹配时忽略与字符串的大小写</li>
+            <li>m: 表示多行multiline模式</li>
+        </ol>
+
+        <h2>Function类型</h2>
+        <p>每个函数都是Function类型的实例，而且与其他引用类型一样具有属性和方法。由于函数是对象，因此函数名实际上是指向函数对象的指针，不会与某个函数绑定。</p>
+        <script type="text/javascript">
+            function sum(num1, num2) {
+                return num1 + num2;
+            }
+
+            var sum = function(num1, num2) {
+                return num1 + num2;
+            }
+        </script>
+
+        <h3>没有重载</h3>
+        <h3>函数式生命与函数表达式</h3>
+        <p>解析器在执行环境加载数据时，对函数式声明和函数表达式并非一视同仁。解析器会在率先读取函数声明，并使其在执行代码之前可用，至于函数表达式，必须要等到解析器执行到它躲在的代码行，才会真正解释执行。</p>
+        <p>函数式声明:</p>
+        <script type="text/javascript">
+            alert(sum(10, 10));
+            function sum(num1, num2) {
+                return num1 + num2;
+            }
+        </script>
+        <p>以上代码正产执行</p>
+
+        <p>函数表达式:</p>
+        <script type="text/javascript">
+            alert(sum(10, 10));
+            var sum = function(num1, num2) {
+                return num1 + num2;
+            }
+        </script>
+        <p>以上代码执行会报错</p>
+
+        <h3>作为值的函数</h3>
+        <h3>函数内部属性</h3>
+        <p>在函数内部，有两个特殊的对象：arguments和this. 其中, arguments是一个数组对象，包含所有传入函数的参数。虽然arguments的作用是保存函数参数，但这个对象有一个callee的属性，该属性是一个指针，指向拥有这个arguments对象的函数。</p>
+        <script type="text/javascript">
+            function factorial(num) {
+                if (num <= 1) {
+                    return 1
+                }
+                else{
+                    return num * arguments.callee(num-1)
+                }
+            }
+        </script>
+        <p>函数内部的另一个对象是this。this引用的是函数据以执行的环境变量。当再网页全局作用域调用函数时，this引用的是window对象。</p>
+        <h3>函数的属性和方法</h3>
+        <p>ECMAScript中的函数时对象，因此函数也有属性和方法。每个函数都有两个属性：length和prototype。其中，length属性表示函数希望接收命名参数的个数。</p>
+        <script type="text/javascript">
+            function sum(num1, num2) {
+                return num1 + num2;
+            }
+            console.log(sum.length);
+        </script>
+        <p>在ECMAScript核心定义的全部属性中，最耐人寻味的就是prototype属性了。对于ECMAScript的引用类型，prototype保存着所有实例方法的真正所在。诸如toString()和valueOf()等方法实际保存在prototype名下，只不过通过对象实例访问罢了。在自定义创建引用类型以及实现继承时，prototype属性都是极为重要的。在ECMAScript5中，prototype属性是不可枚举的，因此使用for-in无法实现。</p>
+        <p>每个函数都包含两个非集成而来的方法：apply()和call()。apply()方法接收两个参数：一个是其运行函数的作用域，另一个是参数数组。其中，第二个参数可以是Array的实例，也可以是arguments对象。</p>
+        <script type="text/javascript">
+            function sum(num1, num2) {
+                return num1 + num2;
+            }
+
+            function callSum1(num1, num2) {
+                return sum.apply(this, arguments);
+            }
+
+            function callSum2(num1, num2) {
+                return sum.apply(this, [num1, num2]);
+            }
+        </script>
+        <p>callSum1()在执行sum()函数时，传入了this(因为是在全局的作用域中调用，所以传入的window对象)和arguments对象。 ？？？</p>
+        <p>call()方法与apply()方法的作用相同，它们的区别在于接收参数的方式不同。</p>
+        <script type="text/javascript">
+            function sum(num1, num2) {
+                return num1 + num2;
+            }
+
+            function callSum(num1, num2) {
+                return sum.call(this, num1, num2);
+            }
+        </script>
+        <p>事实上，传递参数并非apply()和call()真正的用武之地，它们真正强大的地方是能够扩充函数赖以运行的作用域。</p>
+        <script type="text/javascript">
+            window.color = "red";
+            var o = {
+                color: "blue",
+            }
+
+            function sayColor() {
+                return this.color;
+            }
+
+            sayColor.apply(this);
+            sayColor.apply(window);
+            sayColor(o);
+        </script>
+        <p>ECMAScript 5 还定义了一个方法：bind()。这个方法会创建一个函数实例，其this会绑定到传递给bind()函数的值。</p>
+
+        <h2>基本包装类型</h2>
+
+        <h2>单体内置类型</h2>
     </body>
 </html>
