@@ -154,7 +154,7 @@
         <script type="text/javascript">
             function Person(name, age, job) {
                 this.name = name;
-                this.age = agen;
+                this.age = age;
                 this.job = job;
                 this.sayName = function() {
                     console.log(this.name);
@@ -164,7 +164,7 @@
             var person1 = Person("Nichoals", 29, "Software Engineer");
             var person2 = Person("Greg", 27, "Doctor");
         </script>
-        <p>在这个例子中，Person()函数取代了createPerson()函数。Person()中的代码除了与createPerson()中相同的部分之外，还存在以下不同之处：</p> 
+        <p>在这个例子中，Person()函数取代了createPerson()函数。Person()中的代码除了与createPerson()中相同的部分之外，还存在以下不同之处：</p>
         <ul>
             <li>没有显示的创建对象</li>
             <li>直接将属性和方法赋给了this对象</li>
@@ -182,5 +182,479 @@
         <p>在前面例子的最后，person1和person2分别保存着Person不同的实例。这两个对象都有一个constructor（构造函数）属性，该属性执行Person</p>
         <p>alert(person1.constructor == Person); //true</p>
         <p>alert(person2.constructor == Person); //true</p>
+        <p>对象的constructor属性最初是用来标识对象类型的。但是，提到检测对象类型，还是instanceof操作符更可靠些。</p>
+
+        <p>alert(person1 isinstanceof Person); //true</p>
+        <p>alert(person1 isinstanceof Object); //true</p>
+        <p>创建自定义的构造函数意味着将来可以将它的实例标识为一种特定的类型；而这正是构造函数胜过工厂模式的地方。</p>
+        <b>以这种方式定义的构造函数是定义在Global对象(在浏览器中是window对象)中的.第8章中详细讨论浏览器对象模型(BOM)。</b>
+
+        <h4>1.将构造函数当作函数</h4>
+        <p>构造函数与其他函数的唯一区别：就在调用它们的方式不同。不过，构造函数也是函数，不存在定义构造函数特殊语法。任何函数，只要通过new操作符来调用，那它就可以作为构造函数;而任何函数，如果不通过new操作符调用，那它跟普通函数没有区别。</p>
+        <h4>2.构造函数的问题</h4>
+        <p>构造函数模式虽然好用，但不是没有缺点。使用构造函数的主要问题，就是每个方法都要在实例上重新创建一遍。在上面的例子中，person1和person2都有一个sayName()方法，但那个方法不是同一个Function实例。</p>
+        <p>this.sayName = new Function("alert(this.name)"); //声明函数在逻辑上是等价的</p>
+        <p>alert(person1.sayName == person2.sayName); //false</p>
+        <script type="text/javascript">
+            function Person(name, age, job) {
+                this.name = name;
+                this.age = age;
+                this.job = job;
+                this.sayName = sayName;
+            }
+
+            function sayName() {
+                console.log(this.name);
+            }
+        </script>
+        <p>在这个例子中，我们把sayName()函数的定义转移到构造函数外部。在构造函数内部，我们将sayName属性设置成等于全局的sayName函数。这样以来，sayName包含的是一个指向函数的指针，这样person1和person2共享了全局作用域的sayName函数。可是新的问题来了：在全局作用域中定义的函数实际上只能被某个对象调用，这个全局作用域有点名不符实。而更让人无法接受的是：如果对象需要定义很多方法，name就要定义很多全局函数，于是我们定义的引用类型就没有丝毫的封装性。好在，这些问题可以通过原型模式解决。</p>
+
+        <h3>6.2.3 原型模式</h3>
+        <p>我们创建的每一个函数都有一个prototype(原型)属性，这个属性是一个指针，指向一个对象，而这个对象的用途是包含可以由特定类型所有实例共享的属性和方法。使用原型的好处是可以让所有对象实例共享它所包含属性和方法。</p>
+        <script type="text/javascript">
+            function Person() {
+
+            }
+            Person.prototype.name = "Nicholas";
+            Person.prototype.age = 29;
+            Person.prototype.job = "Software Engineer";
+            Person.prototype.sayName = function() {
+                console.log(this.name);
+            };
+
+            var person1 = new Person();
+            var person2 = new Person();
+            console.log(person1.sayName == person2.sayName);
+        </script>
+
+        <h4>1. 理解原型对象</h4>
+        <p>无论什么时候，只要创建了一个函数，就会根据一组特定规则为这个函数创建一个prototype属性，这个属性执行函数的原型对象。在默认情况下，所有原型对象都会获取一个constructor属性，这个属性包含一个prototype属性所在函数的指针。拿前面的例子来说，Person.prototype.constructor执行Person.</p>
+        <img src="http://processon.com/chart_image/5be397e2e4b027a02299e5c3.png">
+        <p>上图展示了Person构造函数、Person原型属性以及Person两个实例之间的关系。Person.prototype指向原型对象，Person.prototype.constructor又指向了Person。Person的每个实例，都抱一个__proto__属性指向Person的原型对象。</p>
+        <p>另外，原型可以通过isPrototypeOf()确定对象和原型之间是否存在联系。</p>
+        <p>Person.prototype.isPrototypeOf(person1); //true</p>
+        <p>alter(Object.getPrototypeOf(person1) == Person.prototype)); //true</p>
+
+        <p>hasOwnProperty()方法可以检测一个属性是存在于实例中，还是原型中。</p>
+
+        <h4>2. 原型和in操作符</h4>
+        <p>有两种方式使用in操作符：单独使用和for-in循环中使用。</p>
+
+        <h4>3. 更简单的原型语法</h4>
+        <script type="text/javascript">
+            function Person() {
+
+            };
+
+            Person.prototype = {
+                name: "Nicholas",
+                age: 29,
+                job: "Software Engineer",
+                sayName: function() {
+                    console.log(this.name);
+                }
+            }
+        </script>
+        <p>上面的代码，我们将Person.prototype设置为一个以对象字面量形式创建的新对象。最终结果相同，但有一个例外: constructor不再指向Person了。前面介绍过，每创建一个函数，就会同时创建它的prototype对象，这个对象也会自动获得constructor属性。而这里使用的语法，基本重写了prototype对象，因此constructor属性也变成新对象的constructor属性，不再指向Person函数。</p>
+
+        <script type="text/javascript">
+            function Person(){
+
+            }
+
+            Person.prototype = {
+                name: "Nicholas",
+                age: 29,
+                job: "Software Engineer",
+                sayName: function() {
+                    console.log(this.name);
+                }
+            }
+        </script>
+        <p>注意，以这种方式重设constructor属性，会导致它的[[enumerable]]属性设置为true。默认情况下，原生的constructor属性是不可枚举的。</p>
+        <script type="text/javascript">
+            function Person() {
+
+            }
+
+            Person.prototype = {
+                name: "Nicholas",
+                age: 29,
+                job: "Software Engineer",
+                sayName: function() {
+                    console.log(this.name);
+                }
+            }
+
+            Object.defineProperty(Person.prototype, 'constructor', {
+                enumerable: false,
+                value: Person
+            })
+        </script>
+
+        <h4>4. 原型的动态性</h4>
+        <p>我们对原型的任何修改都能立即从实例上反应出来--即使是先创建实例，再修改原型也是如此。</p>
+
+        <p>尽管可以随时为原型添加属性和方法，并且修改能够立即在对象实例中反映出来，但如果是重写整个原型对象，那么情况就不一样的了。我们知道，调用构造函数时会为实例添加一个指向对出原型的[[Prototype]]指针，而把原型修改为另一个对象就等于切断了构造函数与原型之间的联系。</p>
+        <b>实例中的原型指向原型，而不指向构造函数。</b>
+        <script type="text/javascript">
+            function Person() {
+            }
+
+            var person = new Person();
+
+            Person.prototype = {
+                name: "Nicholas",
+                age: 29,
+                job: "Software Engineer",
+                sayName: function() {
+                    console.log(this.name);
+                }
+            }
+
+            // person.sayName error
+        </script>
+
+        <h4>5. 原生对象的原型</h4>
+        <p>原型模式的重要性不仅体现在创建自定义类型方面，就连所有原生的引用类型，都是采用这种模式创建的。所有原生引用类型（Object、Array、String等等）都在构造函数的原型上定义了方法。</p>
+
+        <h4>6. 原型对象的问题</h4>
+        <p>原型模式不是没有缺点。首先，它省略了为构造函数传递舒适化参数这一环节，结果所有的实例在默认情况下都取得相同的属性值。另外，原型最大的问题是由其共享的本质所导致的。</p>
+
+        <h3>6.2.4 组合使用构造函数模式和原型模式</h3>
+        <p>创建自定义类型的最常见的方式是：组合使用构造函数和原型模式。构造函数模式用于定义实例属性，原型模式用于定义方法和共享属性。结果：每个实例都有一份自己的一份实例属性的副本，当同时共享者对方法的引用，最大限度的节省了内存。</p>
+
+        <script type="text/javascript">
+            function Person(name, age, job) {
+                this.name = name;
+                this.age = age;
+                this.job = job;
+                this.friends = ["Shelby", "Court"]
+            }
+
+            Person.prototype = {
+                constructor: Person,
+                sayName: function() {
+                    console.log(this.name);
+                }
+            }
+
+            var person1 = new Person("Nicholas", 29, "Software Engineer");
+            var person2 = new Person("Greg", 26, "Doctor");
+
+            person1.friends.push("Van");
+            console.log(person1.friends);
+            console.log(person2.friends);
+        </script>
+
+        <h3>6.2.5 动态原型模式</h3>
+        <p>有其他OO语言经验的开发人员看到独立的构造函数和原型时，很可能会感到困惑。动态原型模式是致力于解决这一问题的一个方案。它把所有的信息封装在构造函数之中，通过在构造函数中初始化原型，这样保持了同时使用构造函数和原型的优点。</p>
+
+        <script type="text/javascript">
+            function Person(name, age, job) {
+                this.name = name;
+                this.age = age;
+                this.job = job;
+
+                if (typeof this.sayName != "function") {
+                    Person.prototype.sayName = function() {
+                        console.log(this.name);
+                    }
+                }
+            }
+
+            var person1 = new Person("Nicholas", 29, "Software Engineer");
+            var person2 = new Person("Greg", 32, "Doctor");
+            person1.sayName();
+            console.log(person1.sayName == person2.sayName);
+        </script>
+
+        <h3>6.2.6 寄生构造函数</h3>
+        <p>与工厂模式一致</p>
+
+        <h3>6.2.7 稳妥构造函数模式</h3>
+        <p>所谓稳妥对象，指的是没有公共属性，而且其方法也不引用this对象。稳妥对象适用于一些安全环境（这些环境禁用this和new），或者防止数据被其他应用程序改动时使用。</p>
+        <p>稳妥构造函数与寄生构造函数的不同：</p>
+        <ol>
+            <li>新创建对象的实例方法不引用this</li>
+            <li>不适用new操作符调用构造函数</li>
+        </ol>
+        <script type="text/javascript">
+            function Person(name, age, job) {
+                var o = new Object();
+                o.sayName = function() {
+                    console.log(name);
+                }
+                return o;
+            }
+
+            var person = Person("Nichloas", 29, "Software Engineer");
+            person.sayName();
+        </script>
+        <b>与寄生构造函数模式类似，使用稳妥构造函数创建的对象和构造函数之间没有什么关系，因此instanceOf对这种对象没有意义。</b>
+
+        <h2>6.3 继承</h2>
+        <p>继承是OO语言最为人津津乐道的概念。许多OO语言支持两种集成：接口继承和实现继承。接口继承只继承方法签名，实现继承继承实际的方法。如前所述，由于函数没有签名，在ECMAScript中无法实现接口继承。ECMAScript只支持实现继承，而其实现继承主要是靠原型链来实现的。</p>
+
+        <h3>6.3.1 原型链</h3>
+        <p>ECMAScript中描述了原型链的概念，并将原型链作为实现继承的主要方法。其基本思想是利用原型链让一个引用类型继承另一个引用类型的属性和方法。</p>
+
+        <script type="text/javascript">
+            function SuperType() {
+                this.property = true;
+            }
+            SuperType.prototype = {
+                consturctor: SuperType,
+                getSuperValue: function() {
+                    return this.property;
+                }
+            }
+
+            function SubType() {
+                this.subproperty = false;
+            }
+            SubType.prototype = new SuperType();
+            SubType.prototype.getSubValue = function() {
+                return this.subproperty;
+            }
+
+            var instance = new SubType();
+            console.log("instance getSuperValue:" + instance.getSuperValue());
+        </script>
+
+        <h4>1. 别忘记默认的原型</h4>
+        <p>所有的引用类型默认都继承了Object，而这个继承也是通过原型链实现的。所有函数默认原型都是Object实例，因此默认函数都包含一个内部，指针指向Object.prototype。这也正是所有自定义类型都会继承toString()、valueOf()等默认方法的根本原因。</p>
+
+        <h4>2. 确定原型和实例的关系</h4>
+        <p>可以通过两种方式确定原型和实例的关系。</p>
+        <ol>
+            <li>第一种方式：使用instanceof操作符。</li>
+            <li>地中方式：使用isPrototypeOf()方法。</li>
+        </ol>
+
+        <script type="text/javascript">
+            function SuperType() {
+                this.property = true;
+            }
+            SuperType.prototype = {
+                constructor: SuperType,
+                getSuperValue: function() {
+                    return this.property;
+                }
+            }
+
+            function SubType() {
+                this.subproperty = false;
+            }
+            SubType.prototype = new SuperType();
+            SubType.prototype.getSubValue = function() {
+                return this.subproperty;
+            }
+
+            var instance = new SubType();
+            console.log(instance instanceof Object);
+            console.log(instance instanceof SuperType);
+            console.log(instance instanceof SubType);
+
+            console.log(Object.prototype.isPrototypeOf(instance));
+            console.log(SuperType.prototype.isPrototypeOf(instance));
+            console.log(SubType.prototype.isPrototypeOf(instance));
+        </script>
+
+        <h4>3. 谨慎的定义方法</h4>
+        <p>子类型有时候需要重写超类的某个方法，或者添加超类中不存在的方法。但，不管怎样，给原型添加方法的代码一定要放在替换原型的语句之后。</p>
+        <script type="text/javascript">
+            function SuperType() {
+                this.property = true;
+            }
+            SuperType.prototype.getSuperValue = function() {
+                return this.property;
+            }
+
+            function SubType() {
+                this.subproperty = false;
+            }
+            SubType.prototype = new SuperType();
+            SubType.prototype.getSubValue = function() {
+                return this.subproperty;
+            }
+            SubType.prototype.getSuperValue = function() {
+                return false;
+            }
+
+            var instance = new SubType();
+            instance.getSuperValue();       // false
+        </script>
+
+        <h4>4. 原型链的问题</h4>
+        <p>原型链虽然很强大，可以用来实现继承，但它也存在一些问题。其中：最主要的问题来自于包含引用类型值的原型。引用类型的值的原型会被所有实例共享，而这也是为什么要构造函数中，而不是在原型对象中定义属性的原因。</p>
+        <p>原型链的第二个问题：在创建子类型时，不能向超类的构造函数传递参数。实际上，应该说是在不影响所有对象的情况下，给超类型的构造函数传递参数。因此，实践上很少单独使用原型链。</p>
+
+        <h3>6.3.2 借用构造函数</h3>
+        <p>在解决原型中包含引用类型值所带来的问题的过程，开发人员开始使用一种叫做借用构造函数(constructor stealing)的技术（有时候叫伪造对象或经典继承）。这种技术的基本思想很简单，即在子类构造函数的内部调用超类的构造函数。别忘了，函数只不过是在特定环境中执行代码的对象，因此通过使用apply和call()方法也可以在新创建的对象执行构造函数。</p>
+
+        <script type="text/javascript">
+            function SuperType() {
+                this.colors = ["red", "green", "blue"];
+            }
+
+            function SubType() {
+                SuperType.call(this);
+            }
+
+            var instance1 = new SubType();
+            instance1.colors.push("black");
+            console.log(instance1.colors);
+
+            var instance2 = new SubType();
+            console.log(instance2.colors);
+        </script>
+
+        <h4>1. 传递参数</h4>
+        <p>相对于原型链而言，借用构造函数有一个很大优势，即可以在子类构造函数中向超类型构造函数中传递参数。</p>
+        <script type="text/javascript">
+            function SuperType(name) {
+                this.name = name;
+            }
+
+            function SubType() {
+                SuperType.call(this, "Nichloas");
+                this.age = 29;
+            }
+            var instance = new SubType()
+            console.log(instance.name);
+            console.log(instance.age);
+        </script>
+        <h4>2. 借用构造函数的问题</h4>
+
+        <h3>6.3.3 组合继承</h3>
+        <p>组合集成（combination inheritance），有时候也叫伪经典继承，指的是将原型链和借用构造函数的技术组合到一块，从而发挥二者之长的一种继承模式。其背后的思路是使用原型链实现对原型属性和方法的继承，而通过借用构造函数来实现对实例属性的继承。这样，既通过在原型上定义了方法实现函数复用，又能保证每个实例都有它自己的属性。</p>
+
+        <script type="text/javascript">
+            function SuperType(name) {
+                this.name = name;
+                this.colors = ["red", "green", "blue"];
+            }
+            SuperType.prototype.sayName = function (){
+                console.log(this.name);
+            }
+
+            function SubType(name, age) {
+                SuperType.call(this, name);
+                this.age = age;
+            }
+            SubType.prototype = new SuperType();
+            SubType.prototype.constructor = SubType;
+            SubType.prototype.sayAge = function() {
+                console.log(this.age);
+            }
+
+            var instance1 = new SubType("Nicholas", 29);
+            instance1.colors.push("black");
+            console.log(instance1.colors);
+            instance1.sayName();
+            instance1.sayAge();
+
+            var instance2 = new SubType("Greg", 27);
+            console.log(instance2.colors);
+            instance2.sayName();
+            instance2.sayAge();
+        </script>
+
+        <h3>6.3.4 原型式继承</h3>
+        <p>道格拉斯-克罗克福德在2006年写了一篇文章，题为Prototypal Inheritance in JavaScript。在这片文章中，他介绍了一种实现继承的方法，这种方法并没有严格意义上的构造函数。他的想法是借助原型可以基于已有的对象创建新的对象，同时还不必创建自定义类型。</p>
+        <script type="text/javascript">
+            function object(o) {
+                function F() {};
+                F.prototype = o;
+                return new F();
+            }
+        </script>
+        <p>再object()内部，先创建了一个临时性的构造函数，然后将传入的对象作为这个构造函数的原型，最后返回了这个临时类型的一个新实例。从本质上讲，object()对传入其中的对象执行了一次浅复制。</p>
+        <p>ECMAScript5通过新增Object.create()方法规范了原型式继承。这个方法接收两个参数：一个用作新对象原型的对象和（可选的）一个为新对象定义额外属性的对象。</p> 
+        <script type="text/javascript">
+            var person = {
+                name: "Nicholas",
+                friend: ["Shelby", "Court", "Van"]
+            };
+
+            var anotherPerson = Object.create(person);
+            anotherPerson.name = "Greg";
+            anotherPerson.friends.push("Rob");
+
+            var yetAnotherPerson = Object.create(person);
+            yetAnotherPerson.name = "Linda";
+            yetAnotherPerson.friends.push("Barbie");
+
+            console.log(person.friends);
+
+            var anotherPerson = Object.create(person, {
+                name: {
+                    value: "Greg"
+                }
+            })
+            console.log(anotherPerson.name);
+        </script>
+
+        <h3>6.3.5 寄生式继承</h3>
+        <script type="text/javascript">
+            function object(o) {
+                function F() {};
+                F.prototype = o;
+                return new F();
+            }
+
+            function createAnother(original) {
+                var clone = object(original);
+                clone.sayHi = function() {
+                    console.log("Hi");
+                };
+                return clone;
+            }
+
+            var person = {
+                name: "Nicholas",
+                friends: ["Shelby", "Court", "Van"]
+            }
+            var anotherPerson = createAnother(person);
+            anotherPerson.sayHi();
+        </script>
+
+        <h3>6.3.6 寄生组合式继承</h3>
+        <script type="text/javascript">
+            function SuperType(name) {
+                this.name = name;
+                this.colors = ["red", "green", "blue"];
+            }
+
+            SuperType.prototype.sayName = function() {
+                console.log(this.name);
+            }
+
+            function SubType(name, age) {
+                SuperType.call(this, name);     // 第二次调用SuperType()
+                this.age = age;
+            }
+            SubType.prototype = new SuperType();    // 第一次调用SuperType()
+            SubType.consturctor = SubType;
+            SubType.sayAge = function() {
+                console.log(this.age);
+            }
+        </script>
+
+        <h2>6.4 小结</h2>
+        <p>ECMAScrip支持面向对象编程，但不支持类或者接口。对象可以在代码执行过程中创建和增强，因此具有动态性而非严格定义的实体。在没有类的情况下，可以采用以下几种模式创建对象：</p>
+        <ul>
+            <li>工厂模式，使用简单的函数创建对象，为对象添加属性和方法，然后返回对象。这个模式后来被构造函数模式取代。</li>
+            <li>构造函数模式，可以创建自定义引用类型，可以像创建内置对象实例一样使用new操作符。不过，构造函数也有缺点，即它的成员无法复用，包括函数。</li>
+            <li>原型模式，使用构造函数的prototype属性来指定那些应该共享的属性和方法。组合使用构造函数和原型模式时，使用构造函数定义属性，而使用原型定义共享的属性和方法。</li>
+        </ul>
+
+        <p>JavaScript主要通过原型链实现继承。原型链的构建是通过将一个类型的实例赋值给另一个构造函数的原型实现的。这样，子类型就能够访问超类型的属性和方法。原型链的问题是对象实例共享所有继承的属性和方法，因此不宜单独使用。解决这个问题的技术是借用构造函数，即再子类型构造函数的内部调用超类的构造函数。这样就可以做到每个实例都具有自己的属性，同时还能保证只使用构造函数模式来定义类型。使用最多的是组合集成，这种模式使用原型链继承共享属性和方法，而通过构造函数继承实例属性。</p>
+        <ul>
+            <li>原型式继承，可以在不必原先定义构造函数的情况下实现继承，其本质是执行对给对象的浅复制，而复制的副本还可以得到进一步改造。</li>
+            <li>寄生式继承，与原型式继承非常相似，也是基于某个对象或某些信息创建一个对象，然后增强对象，最后返回对象。</li>
+            <li>寄生组合继承，集寄生和组合集成的优点与一身，是实现基于类型继承的最有效方法。</li>
+        </ul>
     </body>
 </html>
