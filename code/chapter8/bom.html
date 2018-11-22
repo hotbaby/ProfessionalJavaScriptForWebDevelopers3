@@ -1,0 +1,29 @@
+<html>
+    <head>
+        <meta charset="utf8">
+        <title>BOM</title>
+    </head>
+    <body>
+        <h1>8 BOM</h1>
+        <b>本章内容</b>
+        <ol>
+            <li>理解window对象--BOM核心</li>
+            <li>控制窗口、框架和弹出窗口</li>
+            <li>利用location对象中的页面信息</li>
+            <li>使用navigator对象了解浏览器</li>
+        </ol>
+        <h2>8.1 window对象</h2>
+        <p>BOM的核心是window，它表示浏览器实例。在浏览器中，window对象有双重角色，它既是通过JavaScript访问浏览器窗口的一个接口，又是ECMAScript规定的Global对象。</p>
+        <h3>8.1.1 全局作用域</h3>
+        <p>由于window对象同时扮演着ECMAScript中Global对象的角色，因此所有在全局作用域中声明的变量、函数都会变成window对象的属性和方法。</p>
+        <p>抛开全局变量会编程window对象属性不谈，定义全局变量与在window对象上直接定义属性还是有一点区别：全局变量不能通过delete操作符删除，而直接定义在window对象上定义的属性可以。</p>
+        <script type="text/javascript">
+            var age = 29;
+            window.color = "red";
+            delete window.age;
+            delete window.color;
+            console.log(window.age);        // 29
+            console.log(window.color);      // undefined
+        </script>
+    </body>
+</html>
