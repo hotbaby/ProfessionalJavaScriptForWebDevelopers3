@@ -52,5 +52,64 @@
             <li>confirm()确认对话框</li>
             <li>propmt()提示框</li>
         </ol>
+        <h2>8.2 location对象</h2>
+        <p>location是最有用的BOM对象之一，它提供了与当前窗口中加载的文档有关的信息，还提供了一些导航功能。事实上，location对象是一个很特别的一个对象，因为它既是window对象的属性，也是document对象的属性。</p>
+        <h3>8.2.1 查询字符串参数</h3>
+        <script type="text/javascript">
+            function getQueryString() {
+                var qs = location.search.length > 0 ? location.search.substring(1) : "";
+                var args = {};
+                items = qs.split("&");
+                for(var i=0; i<items.length; i++) {
+                    item = items[i].split("=");
+                    key = decodeURIComponent(item[0]);
+                    value = decodeURIComponent(item[1]);
+                    args[key] = value;
+                }
+                return args;
+            }
+        </script>
+        <h3>8.2.2 位置操作</h3>
+        <h2>8.3 navigator对象</h2>
+        <p>与其他BOM对象的情况一样，每个浏览器的navigator对象也都有一套自己的属性。</p>
+        <h3>8.3.1 检测插件</h3>
+        <p>检测浏览器中是否安装了特定的插件是一种产检检测程序。对于非IE浏览器，可以使用plugins数组达到这个目的。该数组中的每一项都包含下列属性：</p>
+        <ol>
+            <li>name: 插件的名字</li>
+            <li>description: 插件描述</li>
+            <li>filename: 插件的文件名</li>
+            <li>length: 插件所处理的MIME类型数量</li>
+        </ol>
+
+        <script type="text/javascript">
+            function hasPlugin(name) {
+                name = name.toLowerCase();
+                for (var i=0; i<navigator.plugins.length; i++) {
+                    if (navigator.plugins[i].name.toLowerCase().indexOf(name) > -1) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        </script>
+        <h3>8.3.2 注册处理程序</h3>
+        <p>Firefox 2 为navigator对象增加了registerContentHandler()和registerProtocolHandler()方法。</p>
+        <h2>8.4 screen对象</h2>
+        <p>JavaScript中有几个对象在编程中用处不大，而screen对象就是其中之一。screen对象用来表明客户端的能力，其中包括浏览器窗口的显示器信息，如像素宽度和高度。</p>
+        <h2>8.5 history对象</h2>
+        <p>history对象保存着用户上网的历史记录，从窗口被打开的那一刻算起。因为history是window对象的属性，因此每个浏览器窗口、每个标签页乃至每个框架，都有自己的history对象和window对象关联。</p>
+
+        <h2>8.6 小结</h2>
+        <p>浏览器对象模型（BOM）以window为依托，表示浏览器窗口以及页面可见区域。同时，window对象还是ECMAScript的Global对象，因而所有全局变量和函数都是它的属性，其所有的原生构造函数以及其他函数也都存在它的命名空间下。</p>
+        <ol>
+            <li>使用框架时，每个框架都有自己的window对象以及所有原生的构造函数及其其他函数的副本。每个框架都保存在frames集合中，可以通过位置或通过名称来访问。</li>
+            <li>有一些窗口指针，可以用来引用其他框架，包括父框架</li>
+            <li>top对象始终指向最外围的框架，也就是整个浏览器窗口</li>
+            <li>parent对象宝行当前框架的框架，而self对象则指向window</li>
+            <li>使用location对象可以通过编程的方式访问浏览器的导航系统。设置响应的属性，可以整段或整体地修改浏览器的URL</li>
+            <li>调用replace()方法可以导航到一个新的URL，同时该URL会替换浏览器历史当前显示的页面</li>
+            <li>navigator对象提供了与浏览器相关的信息</li>
+        </ol>
+        <p>BOM中还有两个对象：screen和history，但它们功能有限。screen对象保存着与客户端显示器有关的信息。history对为访问浏览器历史记录开了一个小缝隙，开发人员可以据此判断历史记录的数量，也可以在历史记录中向后或向前导航到任意页面。</p>
     </body>
 </html>
